@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- the theme applied to the application or activity -->
+	<style name="CustomActionBarTheme"
+	       parent="@android:style/Theme.Holo.Light">
+		<item name="android:actionBarStyle">@style/Bar</item>
+	</style>
+
+	<style name="Bar"
+	       parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+		<item name="android:background">#ff00449b</item>
+	</style>
+
+	<style name="blue_background">
+		<item name="android:background">#ff00449b</item>
+	</style>
+
+	<style name="margin">
+		<item name="android:layout_margin">10dip</item>
+	</style>
+	
+	<style name="round">
+		<item name="android:radius">3dip</item>
+	</style>
+
+
+</resources>
