@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">sky</string>
-	<string name="ai_text">Use Artificial Intelligence</string>
-	<string name="bf_text">Brut Force</string>
+	<string name="ai_text">Use Clustering Method</string>
+	<string name="bf_text">Use Outlier Determination</string>
 	<string name="capture">capture</string>
+	<string name="intro">This app takes a photo of the sky and determines the likelihood of raining</string>
 </resources>

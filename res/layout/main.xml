@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               style="@style/blue_background"
 		>
-	<ImageView
+
+	<LinearLayout
+			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:src="@drawable/blue"
-	        android:onClick="land"
-			/>
-</LinearLayout>
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/intro"
+		        android:textColor="#ffd7d7d7"
+		        android:layout_marginLeft="10dp"
+		        android:layout_marginRight="10dp"
+				/>
+
+		<Button
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				style="@style/marginMethodButton"
+				android:text="@string/bf_text"
+		        android:onClick="Outlier"
+				/>
+
+		<Button
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				style="@style/marginMethodButton"
+				android:text="@string/ai_text"
+				android:onClick="Cluster"
+				/>
+	</LinearLayout>
+</ScrollView>
 

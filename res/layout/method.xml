@@ -14,11 +14,6 @@
 			android:text="@string/bf_text"
 			/>
 
-	<Button
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			style="@style/marginMethodButton"
-			android:text="@string/ai_text"
-			/>
+
 
 </LinearLayout>

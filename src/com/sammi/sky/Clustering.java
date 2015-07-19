@@ -18,15 +18,18 @@ import java.util.List;
 /**
  * Created by sammi on 7/19/15.
  */
-public class Analyse extends Activity implements SurfaceHolder.Callback
+public class Clustering extends Activity implements SurfaceHolder.Callback
 {
     private Camera camera;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private ProgressDialog progressDialog;
     private Camera.PictureCallback photoCallback;
-    private int blueOutlier=0,anomaly=0,whitish=0,greyish=0;
-    private int OUTLIER_THRESHOLD=20;
+    private int blueish =0,anomaly=0,whitish=0,greyish=0;
+    private int[] whiteCentroid = {235,235,235};
+    private int[] greyCentroid = {120,120,120};
+    private int[] blueCentroid = {40,40,220};
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -63,15 +66,15 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
                 progressDialog.show();
                 process(bitmap);
 
-                if(blueOutlier>anomaly && blueOutlier>whitish && blueOutlier>greyish)
+                if(blueish >anomaly && blueish >whitish && blueish >greyish)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS BLUE..NO RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY IS BLUE..IT MIGHT NOT RAIN",Toast.LENGTH_LONG).show();
                 }
-                else if(whitish>greyish && whitish>blueOutlier && whitish>anomaly)
+                else if(whitish>greyish && whitish> blueish && whitish>anomaly)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE..A LIKELYHOOD OF RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE..IT MIGHT RAIN",Toast.LENGTH_LONG).show();
                 }
-                else if(greyish>whitish && greyish>blueOutlier && greyish>anomaly)
+                else if(greyish>whitish && greyish> blueish && greyish>anomaly)
                 {
                     Toast.makeText(getBaseContext(),"THE SKY IS GREY..IT WILL RAIN",Toast.LENGTH_LONG).show();
                 }
@@ -207,49 +210,47 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
             for(int h=0;h<height;h++)
             {
                 temp = bitmap.getPixel(w,h);
-                outlier(Color.red(temp),Color.green(temp),Color.blue(temp));
-
+                int[] feed = {Color.red(temp),Color.green(temp),Color.blue(temp)};
+                cluster(feed);
             }
-
         }
     }
 
-    private void outlier(int red, int green, int blue)
+    private void cluster(int[] colors)
     {
-        //this is a simple outlier detection algorithm
-        int percentDiffRed=100,percentDiffGreen,percentDiffblue;
+        int tempWhite=0, tempBlue=0, tempGrey=0;
 
-        percentDiffGreen = (int) (green/red)*100;//casting to int
-        percentDiffblue = (int) (blue/red)*100;//casting to int
-
-
-
-        //Getting outliers
-        if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD && scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
-            anomaly++;
-
-        else if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD)
-            anomaly++;
-
-        else if(scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
-            blueOutlier++;
-
-        else
+        //Getting closest centroid
+        int diffblue,diffwhite,diffGrey;
+        for(int x=0;x<3;x++)
         {
-            //Determining if greyish or whitish
-            int avg = red+green+blue;
-            avg /=3;
-            if(avg>190)
-                whitish++;
-            else
-                greyish++;
+            diffblue = difference(blueCentroid[x] , colors[x]);
+            diffGrey = difference(greyCentroid[x] , colors[x]);
+            diffwhite = difference(whiteCentroid[x] , colors[x]);
+
+            //Vote for temp
+            if(diffblue>diffGrey && diffblue>diffwhite)
+                tempBlue++;
+            else if(diffGrey>diffblue && diffGrey>diffwhite)
+                tempGrey++;
+            else if(diffwhite>diffblue && diffwhite>diffGrey)
+                tempWhite++;
         }
+
+        //Vote colors
+        if(tempBlue>2)
+            blueish++;
+        else if(tempGrey>2)
+            greyish++;
+        else if(tempWhite>2)
+            whitish++;
+        else
+            anomaly++;
     }
 
-    private int scalarDifference(int a,int b)
+    private int difference(int a, int b)
     {
-        //this removes -ves from numbers
-        int diff=a-b;
+        int diff = a-b;
         if(diff<0)
             return diff*-1;
         else
