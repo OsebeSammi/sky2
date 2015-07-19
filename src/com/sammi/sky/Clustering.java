@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -26,9 +28,11 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
     private ProgressDialog progressDialog;
     private Camera.PictureCallback photoCallback;
     private int blueish =0,anomaly=0,whitish=0,greyish=0;
-    private int[] whiteCentroid = {235,235,235};
+    private int[] whiteCentroid = {245,245,245};
     private int[] greyCentroid = {120,120,120};
+    private int[] greyCentroid2 = {190,190,190};
     private int[] blueCentroid = {40,40,220};
+    private int MAX_THRESHOLD =30;
 
 
     @Override
@@ -66,22 +70,30 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
                 progressDialog.show();
                 process(bitmap);
 
-                if(blueish >anomaly && blueish >whitish && blueish >greyish)
+                ScrollView layout = (ScrollView) findViewById(R.id.process_layout);
+                TextView view = (TextView) findViewById(R.id.resultText);
+                if(blueish>anomaly && blueish>whitish && blueish>greyish)
                 {
                     Toast.makeText(getBaseContext(),"THE SKY IS BLUE..IT MIGHT NOT RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY IS BLUE..IT MIGHT NOT RAIN");
                 }
-                else if(whitish>greyish && whitish> blueish && whitish>anomaly)
+                else if(whitish>greyish && whitish>blueish && whitish>anomaly)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE..IT MIGHT RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE WITH CLOUDS..IT MIGHT RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY IS WHITE WITH CLOUDS..IT MIGHT RAIN");
+                    layout.setBackgroundColor(Color.WHITE);
                 }
-                else if(greyish>whitish && greyish> blueish && greyish>anomaly)
+                else if(greyish>whitish && greyish>blueish && greyish>anomaly)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS GREY..IT WILL RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY HAS DARK CLOUDS..IT WILL RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY HAS DARK CLOUDS..IT WILL RAIN");
+                    layout.setBackgroundColor(Color.GRAY);
                 }
                 else
                 {
                     //anomaly is greatest
                     Toast.makeText(getBaseContext(),"I DINT GET A GOOD VIEW OF THE SKY! TRY AGAIN",Toast.LENGTH_LONG).show();
+                    view.setText("I DINT GET A GOOD VIEW OF THE SKY! TRY AGAIN");
                 }
 
                 progressDialog.cancel();
@@ -221,19 +233,22 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
         int tempWhite=0, tempBlue=0, tempGrey=0;
 
         //Getting closest centroid
-        int diffblue,diffwhite,diffGrey;
+        int diffblue,diffwhite,diffGrey,diffGrey2;
         for(int x=0;x<3;x++)
         {
             diffblue = difference(blueCentroid[x] , colors[x]);
             diffGrey = difference(greyCentroid[x] , colors[x]);
+            diffGrey2 = difference(greyCentroid2[x] , colors[x]);
             diffwhite = difference(whiteCentroid[x] , colors[x]);
 
             //Vote for temp
-            if(diffblue>diffGrey && diffblue>diffwhite)
+            if(diffblue>diffGrey && diffblue>diffwhite && diffblue< MAX_THRESHOLD)
                 tempBlue++;
-            else if(diffGrey>diffblue && diffGrey>diffwhite)
+            else if(diffGrey>diffblue && diffGrey>diffwhite && diffGrey< MAX_THRESHOLD)
                 tempGrey++;
-            else if(diffwhite>diffblue && diffwhite>diffGrey)
+            else if(diffGrey2>diffblue && diffGrey2>diffwhite && diffGrey2< MAX_THRESHOLD)
+                tempGrey++;
+            else if(diffwhite>diffblue && diffwhite>diffGrey && diffwhite< MAX_THRESHOLD)
                 tempWhite++;
         }
 

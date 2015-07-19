@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,9 +53,7 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
                 //Get Bitmap
                 setContentView(R.layout.process);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
-                /*ImageView view = (ImageView) findViewById(R.id.takenImage);
-                view.setScaleType(ImageView.ScaleType.FIT_XY);
-                view.setImageBitmap(bitmap);*/
+
 
                 progressDialog.setMessage("..processing..");
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -63,22 +61,31 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
                 progressDialog.show();
                 process(bitmap);
 
+
+                ScrollView layout = (ScrollView) findViewById(R.id.process_layout);
+                TextView view = (TextView) findViewById(R.id.resultText);
                 if(blueOutlier>anomaly && blueOutlier>whitish && blueOutlier>greyish)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS BLUE..NO RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY IS BLUE..IT MIGHT NOT RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY IS BLUE..IT MIGHT NOT RAIN");
                 }
                 else if(whitish>greyish && whitish>blueOutlier && whitish>anomaly)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE..A LIKELYHOOD OF RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY IS WHITE WITH CLOUDS..IT MIGHT RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY IS WHITE WITH CLOUDS..IT MIGHT RAIN");
+                    layout.setBackgroundColor(Color.WHITE);
                 }
                 else if(greyish>whitish && greyish>blueOutlier && greyish>anomaly)
                 {
-                    Toast.makeText(getBaseContext(),"THE SKY IS GREY..IT WILL RAIN",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),"THE SKY HAS DARK CLOUDS..IT WILL RAIN",Toast.LENGTH_LONG).show();
+                    view.setText("THE SKY HAS DARK CLOUDS..IT WILL RAIN");
+                    layout.setBackgroundColor(Color.GRAY);
                 }
                 else
                 {
                     //anomaly is greatest
                     Toast.makeText(getBaseContext(),"I DINT GET A GOOD VIEW OF THE SKY! TRY AGAIN",Toast.LENGTH_LONG).show();
+                    view.setText("I DINT GET A GOOD VIEW OF THE SKY! TRY AGAIN");
                 }
 
                 progressDialog.cancel();
