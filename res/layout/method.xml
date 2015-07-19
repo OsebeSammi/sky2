@@ -3,18 +3,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+			  style="@style/blue_background"
+		>
 
 	<Button
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="Brut Force"
+			style="@style/marginMethodButton"
+			android:text="@string/bf_text"
 			/>
 
 	<Button
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="Use Artificial Intelligence"
+			style="@style/marginMethodButton"
+			android:text="@string/ai_text"
 			/>
 
 </LinearLayout>

@@ -23,5 +23,9 @@
 		<item name="android:radius">3dip</item>
 	</style>
 
+	<style name="marginMethodButton">
+		<item name="android:layout_margin">50sp</item>
+	</style>
+
 
 </resources>

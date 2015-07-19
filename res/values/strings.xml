@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">sky</string>
+	<string name="ai_text">Use Artificial Intelligence</string>
+	<string name="bf_text">Brut Force</string>
+	<string name="capture">capture</string>
 </resources>

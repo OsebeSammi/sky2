@@ -6,21 +6,25 @@
               android:layout_height="match_parent">
 
 
+
 	<Button
-			android:id="@+id/start"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="start"
+			android:id="@+id/capture"
+			android:text="@string/capture"
+	        android:onClick="captureImage"
 			/>
 	<FrameLayout
-			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
-
+			android:layout_width="fill_parent"
+	        android:id="@+id/photo"
 			>
-		<SurfaceView android:id="@+id/surfaceVideo"
+		<SurfaceView android:id="@+id/surfacePhoto"
 		             android:layout_width="fill_parent"
 		             android:layout_height="fill_parent"/>
 	</FrameLayout>
+
+
 
 
 
