@@ -32,6 +32,7 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
     private int[] greyCentroid = {120,120,120};
     private int[] greyCentroid2 = {190,190,190};
     private int[] blueCentroid = {40,40,220};
+    private int[] blueCentroid2 = {110,110,225};
     private int MAX_THRESHOLD =30;
 
 
@@ -99,6 +100,12 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
                 progressDialog.cancel();
             }
         };
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
     }
 
     public void captureImage(View v) throws IOException
@@ -230,37 +237,44 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
 
     private void cluster(int[] colors)
     {
-        int tempWhite=0, tempBlue=0, tempGrey=0;
+        //int tempWhite=0, tempBlue=0, tempGrey=0;
 
         //Getting closest centroid
-        int diffblue,diffwhite,diffGrey,diffGrey2;
+        int diffblue,diffblue2,diffwhite,diffGrey,diffGrey2;
         for(int x=0;x<3;x++)
         {
             diffblue = difference(blueCentroid[x] , colors[x]);
+            diffblue2 = difference(blueCentroid2[x] , colors[x]);
             diffGrey = difference(greyCentroid[x] , colors[x]);
             diffGrey2 = difference(greyCentroid2[x] , colors[x]);
             diffwhite = difference(whiteCentroid[x] , colors[x]);
 
+            //System.out.println("Blur"+diffblue+"Grey"+diffGrey+"white"+diffwhite);
+
             //Vote for temp
-            if(diffblue>diffGrey && diffblue>diffwhite && diffblue< MAX_THRESHOLD)
-                tempBlue++;
-            else if(diffGrey>diffblue && diffGrey>diffwhite && diffGrey< MAX_THRESHOLD)
-                tempGrey++;
-            else if(diffGrey2>diffblue && diffGrey2>diffwhite && diffGrey2< MAX_THRESHOLD)
-                tempGrey++;
-            else if(diffwhite>diffblue && diffwhite>diffGrey && diffwhite< MAX_THRESHOLD)
-                tempWhite++;
+            if(diffblue<diffGrey && diffblue<diffwhite && diffblue<MAX_THRESHOLD)
+                blueish++;
+            else if(diffblue2<diffGrey && diffblue2<diffwhite && diffblue2<MAX_THRESHOLD)
+                blueish++;
+            else if(diffGrey<diffblue && diffGrey<diffwhite && diffGrey<MAX_THRESHOLD)
+                greyish++;
+            else if(diffGrey2<diffblue && diffGrey2<diffwhite && diffGrey2<MAX_THRESHOLD)
+                greyish++;
+            else if(diffwhite<diffblue && diffwhite<diffGrey  && diffwhite<MAX_THRESHOLD)
+                whitish++;
+            else
+                anomaly++;
         }
 
         //Vote colors
-        if(tempBlue>2)
+        /*if(tempBlue>=2)
             blueish++;
-        else if(tempGrey>2)
+        else if(tempGrey>=2)
             greyish++;
-        else if(tempWhite>2)
+        else if(tempWhite>=2)
             whitish++;
         else
-            anomaly++;
+            anomaly++;*/
     }
 
     private int difference(int a, int b)

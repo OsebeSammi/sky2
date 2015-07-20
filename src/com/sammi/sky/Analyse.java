@@ -93,6 +93,12 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
         };
     }
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+    }
+
     public void captureImage(View v) throws IOException
     {
         //Toast.makeText(getApplicationContext(),"Camera",Toast.LENGTH_SHORT).show();
