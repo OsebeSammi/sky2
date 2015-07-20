@@ -26,7 +26,7 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
     private ProgressDialog progressDialog;
     private Camera.PictureCallback photoCallback;
     private int blueOutlier=0,anomaly=0,whitish=0,greyish=0;
-    private int OUTLIER_THRESHOLD=20;
+    private int OUTLIER_THRESHOLD=80;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -232,30 +232,43 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
         //this is a simple outlier detection algorithm
         int percentDiffRed=100,percentDiffGreen,percentDiffblue;
 
-        percentDiffGreen = (int) (green/red)*100;//casting to int
-        percentDiffblue = (int) (blue/red)*100;//casting to int
-
-
-
-        //Getting outliers
-        if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD && scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
-            anomaly++;
-
-        else if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD)
-            anomaly++;
-
-        else if(scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
-            blueOutlier++;
-
+        //Removing zero dividends
+        if(red==0)
+            red=green;
+        else if(green==0)
+        {
+            red=1;
+            green=1;
+        }
+        else if(blue==0)
+            greyish++;
         else
         {
-            //Determining if greyish or whitish
-            int avg = red+green+blue;
-            avg /=3;
-            if(avg>190)
-                whitish++;
+            percentDiffGreen = (int) (green/red)*100;//casting to int
+            percentDiffblue = (int) (blue/red)*100;//casting to int
+
+
+
+            //Getting outliers
+            if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD && scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
+                anomaly++;
+
+            else if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD)
+                anomaly++;
+
+            else if(scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD && blue>200)
+                blueOutlier++;
+
             else
-                greyish++;
+            {
+                //Determining if greyish or whitish
+                int avg = red+green+blue;
+                avg /=3;
+                if(avg>240)
+                    whitish++;
+                else
+                    greyish++;
+            }
         }
     }
 
