@@ -29,11 +29,11 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
     private Camera.PictureCallback photoCallback;
     private int blueish =0,anomaly=0,whitish=0,greyish=0;
     private int[] whiteCentroid = {245,245,245};
-    private int[] greyCentroid = {120,120,120};
-    private int[] greyCentroid2 = {190,190,190};
+    private int[] greyCentroid = {130,130,130};
+    private int[] greyCentroid2 = {200,200,200};
     private int[] blueCentroid = {40,40,220};
     private int[] blueCentroid2 = {110,110,225};
-    private int MAX_THRESHOLD =30;
+    private int MAX_THRESHOLD =20;
 
 
     @Override
