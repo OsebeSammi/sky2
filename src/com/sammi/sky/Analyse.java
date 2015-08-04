@@ -26,7 +26,10 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
     private ProgressDialog progressDialog;
     private Camera.PictureCallback photoCallback;
     private int blueOutlier=0,anomaly=0,whitish=0,greyish=0;
-    private int OUTLIER_THRESHOLD=80;
+    private int OUTLIER_THRESHOLD=120;
+    private int GREYDIFF=10;
+    private int THRESHOLD =110;
+    private int WHITETHRESHOLD=230;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -53,6 +56,7 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
                 //Get Bitmap
                 setContentView(R.layout.process);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
+                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.greish);
 
 
                 progressDialog.setMessage("..processing..");
@@ -229,45 +233,56 @@ public class Analyse extends Activity implements SurfaceHolder.Callback
 
     private void outlier(int red, int green, int blue)
     {
+        //System.out.println("Red "+ red+" Green "+green+" Blue "+blue);
+
         //this is a simple outlier detection algorithm
         int percentDiffRed=100,percentDiffGreen,percentDiffblue;
 
         //Removing zero dividends
         if(red==0)
-            red=green;
-        else if(green==0)
-        {
             red=1;
+        if(green==0)
             green=1;
-        }
-        else if(blue==0)
-            greyish++;
+        if(blue==0)
+            anomaly++;
         else
         {
-            percentDiffGreen = (int) (green/red)*100;//casting to int
-            percentDiffblue = (int) (blue/red)*100;//casting to int
-
-
+            percentDiffGreen = green*100/red;//casting to int
+            percentDiffblue = blue*100/red;//casting to int
 
             //Getting outliers
-            if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD && scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
+            if((red-green)> THRESHOLD || (red-blue)> THRESHOLD)
                 anomaly++;
 
-            else if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD)
-                anomaly++;
+            /*else if(scalarDifference(percentDiffRed,percentDiffGreen)>OUTLIER_THRESHOLD && scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD)
+                anomaly++;*/
 
-            else if(scalarDifference(percentDiffRed,percentDiffblue)>OUTLIER_THRESHOLD && blue>200)
+            else if(percentDiffblue>OUTLIER_THRESHOLD)
+            {
                 blueOutlier++;
+            }
+
+            else if(percentDiffGreen>OUTLIER_THRESHOLD)
+            {
+                anomaly++;
+            }
+
+            else if(scalarDifference(red,green)<GREYDIFF && scalarDifference(red,blue)<GREYDIFF && scalarDifference(blue,green)<GREYDIFF && red> THRESHOLD && blue> THRESHOLD && green> THRESHOLD && green<WHITETHRESHOLD)
+            {
+                //System.out.println("Red "+ red+" Green "+green+" Blue "+blue);
+                greyish++;
+            }
 
             else
             {
                 //Determining if greyish or whitish
                 int avg = red+green+blue;
                 avg /=3;
-                if(avg>240)
+                if(avg>235)
                     whitish++;
                 else
-                    greyish++;
+                    anomaly++;
+
             }
         }
     }

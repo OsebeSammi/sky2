@@ -29,10 +29,10 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
     private Camera.PictureCallback photoCallback;
     private int blueish =0,anomaly=0,whitish=0,greyish=0;
     private int[] whiteCentroid = {245,245,245};
-    private int[] greyCentroid = {130,130,130};
-    private int[] greyCentroid2 = {200,200,200};
-    private int[] blueCentroid = {40,40,220};
-    private int[] blueCentroid2 = {110,110,225};
+    private int[] greyCentroid = {140,140,140};
+    private int[] greyCentroid2 = {170,170,170};
+    private int[] blueCentroid = {105,120,140};
+    private int[] blueCentroid2 = {120,140,160};
     private int MAX_THRESHOLD =20;
 
 
@@ -61,6 +61,7 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
                 //Get Bitmap
                 setContentView(R.layout.process);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data,0,data.length);
+                //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bluesky);
                 /*ImageView view = (ImageView) findViewById(R.id.takenImage);
                 view.setScaleType(ImageView.ScaleType.FIT_XY);
                 view.setImageBitmap(bitmap);*/
@@ -241,6 +242,7 @@ public class Clustering extends Activity implements SurfaceHolder.Callback
 
         //Getting closest centroid
         int diffblue,diffblue2,diffwhite,diffGrey,diffGrey2;
+
         for(int x=0;x<3;x++)
         {
             diffblue = difference(blueCentroid[x] , colors[x]);
